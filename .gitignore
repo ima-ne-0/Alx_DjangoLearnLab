@@ -1,0 +1,12 @@
+# Environnement virtuel
+venv/
+
+# Base de données SQLite
+*.sqlite3
+
+# Fichiers cache de Python
+__pycache__/
+*.pyc
+
+# Fichiers VSCode (si tu l'utilises)
+.vscode/

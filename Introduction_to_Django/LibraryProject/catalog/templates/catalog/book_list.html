@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notre Catalogue de Livres</title>
+</head>
+<body>
+    <h1>Catalogue de Livres</h1>
+
+    <ul>
+        {% for book in books %}
+            <li>{{ book.title }} - par {{ book.author }}</li>
+        {% empty %}
+            <li>Aucun livre dans le catalogue pour le moment.</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
