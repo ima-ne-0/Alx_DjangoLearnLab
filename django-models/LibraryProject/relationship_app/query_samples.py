@@ -23,7 +23,6 @@ books_in_library = lib.books.all()
 
 
 # --- 3. Requête: "Retrieve the librarian for a library." ---
-# Le checker s'attend à voir ce type de requête:
 lib = Library.objects.get(name=library_name)
-librarian = lib.librarian
+librarian = Librarian.objects.get(library=lib)
 # print(librarian)
