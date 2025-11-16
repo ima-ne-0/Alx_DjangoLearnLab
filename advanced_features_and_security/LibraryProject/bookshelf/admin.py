@@ -1,16 +1,20 @@
 from django.contrib import admin
-from .models import Book
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, Book # Importe les modèles de cette app
 
-# On crée une classe pour personnaliser l'affichage
-class BookAdmin(admin.ModelAdmin):
-    # Tâche 2.1: Affiche ces champs dans la liste
-    list_display = ('title', 'author', 'publication_year')
+# --- Admin pour le CustomUser ---
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ['email', 'is_staff', 'is_active', 'date_of_birth']
+    fieldsets = UserAdmin.fieldsets + (
+        ('Custom Fields', {'fields': ('date_of_birth', 'profile_photo')}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Custom Fields', {'fields': ('date_of_birth', 'profile_photo')}),
+    )
+    search_fields = ['email']
+    ordering = ['email']
 
-    # Tâche 2.2: Ajoute une barre de recherche pour ces champs
-    search_fields = ('title', 'author')
-
-    # Tâche 2.2: Ajoute un filtre sur le côté
-    list_filter = ('publication_year', 'author')
-
-# On enregistre le modèle Book AVEC sa classe de personnalisation
-admin.site.register(Book, BookAdmin)
+# Enregistre les modèles de cette app
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Book) # Le modèle Book de l'app bookshelf
