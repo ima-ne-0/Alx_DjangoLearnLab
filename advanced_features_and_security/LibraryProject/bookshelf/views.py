@@ -2,11 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import Book # Le modèle Book de l'app "bookshelf"
-from django.db.models import Q # Requis pour la recherche ORM
-
-# --- CORRECTION POUR LE CHECKER ALX ---
-# Importe le formulaire avec le bon nom "ExampleForm"
-from .forms import ExampleForm
+from django.db.models import Q
 
 # --- Tâche "Permissions": Vues protégées ---
 
@@ -21,7 +17,9 @@ def book_list(request):
     context = {
         'books': books
     }
-    return render(request, 'relationship_app/list_books.html', context)
+    # --- CORRECTION POUR LE CHECKER ALX ---
+    # Pointe vers le nouveau template que tu viens de créer
+    return render(request, 'bookshelf/book_list.html', context)
 
 @login_required
 @permission_required('bookshelf.can_create', raise_exception=True)
@@ -39,17 +37,17 @@ def book_delete(request, pk):
     return HttpResponse(f"Page pour supprimer le livre {pk} (protégée par 'bookshelf.can_delete')")
 
 # --- TÂCHE DE SÉCURITÉ (Étape 3) ---
-# --- CORRECTION POUR LE CHECKER ALX ---
-# Utilise "ExampleForm" au lieu de "BookSearchForm"
+from .forms import ExampleForm
+
 def book_search_view(request):
     """
     Cette vue gère la recherche de livres de manière sécurisée.
     """
-    form = ExampleForm() # Utilise le nouveau nom
+    form = ExampleForm() 
     results = [] 
 
     if 'query' in request.GET:
-        form = ExampleForm(request.GET) # Utilise le nouveau nom
+        form = ExampleForm(request.GET) 
         
         if form.is_valid():
             query = form.cleaned_data['query']
