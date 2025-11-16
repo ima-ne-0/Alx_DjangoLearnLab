@@ -137,3 +137,39 @@ AUTH_USER_MODEL = 'relationship_app.CustomUser'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+# ... (tout le reste de ton settings.py)
+
+# --- TÂCHE DE SÉCURITÉ (Étape 1 & 4) ---
+# NOTE: DEBUG est réglé sur True pour le développement.
+# En production, mettez TOUJOURS DEBUG = False
+# DEBUG = True 
+
+# Assure-toi que SecurityMiddleware est activé (il l'est par défaut)
+# 'django.middleware.security.SecurityMiddleware',
+
+# Étape 1: Paramètres de sécurité du navigateur
+# (Nécessite que 'django.middleware.security.SecurityMiddleware' soit dans MIDDLEWARE)
+
+# Empêche le navigateur d'essayer de "deviner" le type de contenu (protège contre XSS)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Active le filtre XSS intégré du navigateur
+SECURE_BROWSER_XSS_FILTER = True
+
+# Empêche ton site d'être affiché dans un <iframe> (protège contre le clickjacking)
+X_FRAME_OPTIONS = 'DENY'
+
+# Étape 4: Content Security Policy (CSP)
+# Une couche de sécurité supplémentaire contre XSS.
+# Ceci dit au navigateur: "N'exécute que du code venant de ma propre origine ('self')"
+# (Nécessite 'django.middleware.security.SecurityMiddleware')
+SECURE_HSTS_SECONDS = 3600 # (Active HSTS - optionnel mais recommandé)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Étape 1 (suite): Sécurité des Cookies (à mettre à True en production HTTPS)
+# Pour les tests ALX, nous les laissons à False, mais en production ils seraient à True.
+# CSRF_COOKIE_SECURE = True  # (Nécessite HTTPS)
+# SESSION_COOKIE_SECURE = True # (Nécessite HTTPS)
+
+# --- Fin des paramètres de sécurité ---
