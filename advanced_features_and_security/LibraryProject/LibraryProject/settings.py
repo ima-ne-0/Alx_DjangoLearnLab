@@ -136,3 +136,4 @@ AUTH_USER_MODEL = 'relationship_app.CustomUser'
 # Configuration pour le champ ImageField (profile_photo)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
