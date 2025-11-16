@@ -173,3 +173,51 @@ SECURE_HSTS_PRELOAD = True
 # SESSION_COOKIE_SECURE = True # (Nécessite HTTPS)
 
 # --- Fin des paramètres de sécurité ---
+# ... (tout le reste de ton settings.py)
+
+# ==============================================================================
+# PARAMÈTRES DE SÉCURITÉ (POUR LES TÂCHES ALX)
+# ==============================================================================
+# NOTE: DEBUG est True en développement. Ne jamais mettre DEBUG = True en production.
+# DEBUG = True
+
+# --- Tâche de Sécurité (Headers) ---
+# (Nécesite 'django.middleware.security.SecurityMiddleware')
+
+# Étape 3: Empêche ton site d'être affiché dans un <iframe> (protège contre le clickjacking)
+X_FRAME_OPTIONS = 'DENY'
+
+# Étape 3: Empêche le navigateur de "deviner" le type de contenu (protège contre XSS)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Étape 3: Active le filtre XSS intégré du navigateur (redondant sur les navigateurs modernes)
+SECURE_BROWSER_XSS_FILTER = True
+
+
+# --- Tâche de Sécurité HTTPS (Production) ---
+# ATTENTION: Ne pas activer ces paramètres tant que tu n'es pas en HTTPS (production).
+# Les activer en local (http://) te bloquera l'accès à ton site.
+
+# Étape 1: Redirige tout le trafic HTTP vers HTTPS
+# SECURE_SSL_REDIRECT = True
+
+# Étape 2: N'envoie le cookie de session que sur HTTPS
+# SESSION_COOKIE_SECURE = True
+
+# Étape 2: N'envoie le cookie CSRF que sur HTTPS
+# CSRF_COOKIE_SECURE = True
+
+# Étape 1: Configure HSTS (HTTP Strict Transport Security)
+# Dit au navigateur de ne *jamais* se connecter au site en HTTP
+# SECURE_HSTS_SECONDS = 31536000  # (Valeur pour 1 an)
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+
+# --- Fin des paramètres de sécurité ---
+
+# (Tes autres paramètres comme AUTH_USER_MODEL, MEDIA_URL, etc. restent ici)
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+LOGIN_REDIRECT_URL = '/relations/books/'
+LOGOUT_REDIRECT_URL = '/relations/login/'
