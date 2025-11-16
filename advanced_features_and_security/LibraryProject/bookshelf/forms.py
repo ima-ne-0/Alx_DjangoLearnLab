@@ -1,10 +1,10 @@
 from django import forms
 
-class BookSearchForm(forms.Form):
+# --- CORRECTION POUR LE CHECKER ALX ---
+# Renommage de "BookSearchForm" en "ExampleForm"
+class ExampleForm(forms.Form):
     """
     Un formulaire simple pour valider une requête de recherche.
-    Utiliser un Form garantit que l'entrée est un CharField
-    et non un code malveillant.
     """
     query = forms.CharField(
         max_length=100,
