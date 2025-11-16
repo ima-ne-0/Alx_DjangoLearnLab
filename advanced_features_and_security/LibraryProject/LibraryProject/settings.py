@@ -130,3 +130,9 @@ LOGIN_REDIRECT_URL = '/relations/books/' # Va à la liste des livres
 
 # Où aller après une déconnexion réussie
 LOGOUT_REDIRECT_URL = '/relations/login/' # Retourne à la page de login
+# ÉTAPE 2: Dire à Django d'utiliser notre nouveau modèle
+AUTH_USER_MODEL = 'relationship_app.CustomUser'
+
+# Configuration pour le champ ImageField (profile_photo)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

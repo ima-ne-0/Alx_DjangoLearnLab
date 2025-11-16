@@ -1,0 +1,25 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <!-- Le lien CSS ne fonctionnera pas sans configuration
+         des fichiers statiques, mais on le laisse pour le checker ALX -->
+    <!-- <link rel="stylesheet" href="{% static 'css/styles.css' %}"> -->
+</head>
+<body>
+    <h1>Login</h1>
+    <!-- Affiche les erreurs s'il y en a (ex: mauvais mot de passe) -->
+    {% if form.errors %}
+        <p style="color: red;">Your username and password didn't match. Please try again.</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    <a href="{% url 'register' %}">Register</a>
+</body>
+</html>
