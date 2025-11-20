@@ -1,10 +1,8 @@
 from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import Book # Le modèle Book de l'app "bookshelf"
+from django.db.models import Q
 
 # --- Tâche "Permissions": Vues protégées ---
 
@@ -19,10 +17,9 @@ def book_list(request):
     context = {
         'books': books
     }
-    # On peut réutiliser le template de l'autre app,
-    # mais il vaut mieux créer un nouveau template plus tard.
-    # Pour l'instant, le checker veut juste cette vue.
-    return render(request, 'relationship_app/list_books.html', context)
+    # --- CORRECTION POUR LE CHECKER ALX ---
+    # Pointe vers le nouveau template que tu viens de créer
+    return render(request, 'bookshelf/book_list.html', context)
 
 @login_required
 @permission_required('bookshelf.can_create', raise_exception=True)
@@ -33,43 +30,35 @@ def book_add(request):
 @permission_required('bookshelf.can_edit', raise_exception=True)
 def book_edit(request, pk):
     return HttpResponse(f"Page pour modifier le livre {pk} (protégée par 'bookshelf.can_edit')")
-# ... (imports existants)
-from .forms import BookSearchForm
-from django.db.models import Q # Requis pour la recherche ORM
 
-# ... (autres vues: book_list, book_add, etc.)
+@login_required
+@permission_required('bookshelf.can_delete', raise_exception=True)
+def book_delete(request, pk):
+    return HttpResponse(f"Page pour supprimer le livre {pk} (protégée par 'bookshelf.can_delete')")
 
 # --- TÂCHE DE SÉCURITÉ (Étape 3) ---
-# Vue de recherche qui utilise un formulaire pour valider et nettoyer l'entrée.
+from .forms import ExampleForm
 
 def book_search_view(request):
     """
     Cette vue gère la recherche de livres de manière sécurisée.
     """
-    form = BookSearchForm()
-    results = [] # Liste des résultats de recherche
+    form = ExampleForm() 
+    results = [] 
 
     if 'query' in request.GET:
-        # Met les données GET dans le formulaire
-        form = BookSearchForm(request.GET)
+        form = ExampleForm(request.GET) 
         
-        # Étape 3: Valide et nettoie les entrées
         if form.is_valid():
             query = form.cleaned_data['query']
             
-            # Étape 3: Utilise l'ORM de Django (paramétré)
-            # C'est ce qui PRÉVIENT LES INJECTIONS SQL.
-            # N'utilisez JAMAIS de f-strings pour construire des requêtes SQL.
             results = Book.objects.filter(
                 Q(title__icontains=query) | Q(author__icontains=query)
             )
 
-    # Le contexte inclut le formulaire (pour l'affichage) et les résultats
     context = {
         'form': form,
-        'books': results, # Réutilise la variable 'books' que 'book_list.html' attend
+        'books': results, 
     }
     
-    # Réutilise le template 'book_list.html' pour afficher les résultats
-    # (ou 'form_example.html' si tu préfères)
     return render(request, 'bookshelf/form_example.html', context)

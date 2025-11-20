@@ -173,3 +173,41 @@ SECURE_HSTS_PRELOAD = True
 # SESSION_COOKIE_SECURE = True # (Nécessite HTTPS)
 
 # --- Fin des paramètres de sécurité ---
+
+
+# ==============================================================================
+# PARAMÈTRES DE SÉCURITÉ (POUR LES TÂCHES ALX)
+# ==============================================================================
+# NOTE: DEBUG est True en développement. Ne jamais mettre DEBUG = True en production.
+# DEBUG = True
+
+# --- Tâche de Sécurité (Headers) ---
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+
+# --- Tâche de Sécurité HTTPS (Production) ---
+# ATTENTION: Ne pas activer ces paramètres tant que tu n'es pas en HTTPS (production).
+
+# --- CORRECTION POUR LE CHECKER ALX ---
+# Paramètres pour dire à Django de faire confiance au "Reverse Proxy" (Nginx)
+# qui gère le HTTPS.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True # On peut le mettre à True car le proxy le gère
+
+# --- Fin de la correction ---
+
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+
+# --- Fin des paramètres de sécurité ---
+
+# (Tes autres paramètres comme AUTH_USER_MODEL, MEDIA_URL, etc. restent ici)
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+LOGIN_REDIRECT_URL = '/relations/books/' # C'est une URL de test
+LOGOUT_REDIRECT_URL = '/relations/login/'
