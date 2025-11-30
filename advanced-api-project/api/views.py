@@ -3,6 +3,8 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters import rest_framework
+from rest_framework import filters
 from .models import Book
 from .serializers import BookSerializer
 
@@ -20,6 +22,26 @@ class BookListView(generics.ListAPIView):
     # Ici, nous laissons le comportement par défaut mais on pourrait ajouter filter_backends
     permission_classes = [IsAuthenticatedOrReadOnly] 
     # Note: IsAuthenticatedOrReadOnly autorise tout le monde à lire (GET)
+    filter_backends = [
+        rest_framework.DjangoFilterBackend, # Pour le filtrage exact (Step 1)
+        filters.SearchFilter,               # Pour la recherche textuelle (Step 2)
+        filters.OrderingFilter              # Pour le tri (Step 3)
+    ]
+    # Step 1: Champs de filtrage (égalité exacte)
+    # Permet de faire: /books/?publication_year=2024
+    filterset_fields = ['title', 'author', 'publication_year']
+
+    # Step 2: Champs de recherche (texte partiel)
+    # Permet de faire: /books/?search=Harry
+    # Note: 'author__name' permet de chercher sur le nom de l'auteur via la relation ForeignKey
+    search_fields = ['title', 'author__name']
+
+    # Step 3: Champs de tri
+    # Permet de faire: /books/?ordering=publication_year
+    ordering_fields = ['title', 'publication_year']
+    
+    # Tri par défaut (optionnel mais recommandé)
+    ordering = ['title']
 
 # Étape 1 : DetailView pour récupérer un livre par son ID
 class BookDetailView(generics.RetrieveAPIView):
