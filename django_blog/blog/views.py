@@ -5,7 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from django.urls import reverse_lazy
-from .models import Post, Comment, Tag
+from taggit.models import Tag # Import correct pour la vue
+from .models import Post, Comment
 from .forms import CustomUserCreationForm, PostForm, CommentForm
 
 def register(request):
@@ -80,19 +81,13 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author
 
-# --- AJOUTS OBLIGATOIRES POUR ALX (COMMENTAIRES) ---
-
-# ... (le début du fichier reste pareil)
-
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
-    # Note : On peut utiliser un template dédié ou celui du détail
-    template_name = 'blog/comment_form.html' 
+    template_name = 'blog/comment_form.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        # On récupère le post grâce à l'ID dans l'URL (pk)
         post = get_object_or_404(Post, pk=self.kwargs['pk'])
         form.instance.post = post
         return super().form_valid(form)
@@ -122,3 +117,9 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+
+def tags_view(request, tag_name):
+    # La librairie utilise 'slug' pour les URLs généralement, mais on garde 'name' pour la compatibilité
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = Post.objects.filter(tags=tag).order_by('-published_date')
+    return render(request, 'blog/post_list.html', {'posts': posts, 'tag': tag})
