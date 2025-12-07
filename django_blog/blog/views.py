@@ -1,15 +1,13 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
+# AJOUT OBLIGATOIRE POUR ALX :
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from .models import Post, Comment, Tag
 from .forms import CustomUserCreationForm, PostForm, CommentForm
 
-# --- Auth ---
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -21,10 +19,12 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'blog/register.html', {'form': form})
 
+# AJOUT OBLIGATOIRE : On protège la vue profile
+@login_required
 def profile(request):
     return render(request, 'blog/profile.html')
 
-# --- Blog ---
+# --- Blog Views (Le reste ne change pas) ---
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
