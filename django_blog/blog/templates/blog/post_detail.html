@@ -15,22 +15,32 @@
             {% endfor %}
         </div>
     </article>
-    <hr>
+   <hr>
     <h3>Commentaires</h3>
     {% for comment in object.comments.all %}
         <div class="card mb-2 bg-light">
             <div class="card-body py-2">
                 <strong>{{ comment.author }}</strong>: {{ comment.content }}
+                
+                {% if comment.author == user %}
+                    <div class="float-end">
+                        <a href="{% url 'comment-update' comment.pk %}" class="btn btn-sm btn-outline-secondary">✎</a>
+                        <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-sm btn-outline-danger">✕</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     {% endfor %}
     
     {% if user.is_authenticated %}
-        <form method="POST" class="mt-4">
-            {% csrf_token %}
-            {{ comment_form.as_p }}
-            <button type="submit" class="btn btn-primary">Commenter</button>
-        </form>
+        <div class="mt-4">
+            <h5>Ajouter un commentaire</h5>
+            <form method="POST" action="{% url 'comment-create' object.pk %}">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+        </div>
     {% else %}
         <p><a href="{% url 'login' %}">Connectez-vous</a> pour commenter.</p>
     {% endif %}
