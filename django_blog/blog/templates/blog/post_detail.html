@@ -1,0 +1,37 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    <article>
+        <h1>{{ object.title }}</h1>
+        <p class="text-muted">Par {{ object.author }} | {{ object.published_date }}</p>
+        {% if object.author == user %}
+            <a href="{% url 'post-update' object.id %}" class="btn btn-sm btn-secondary">Modifier</a>
+            <a href="{% url 'post-delete' object.id %}" class="btn btn-sm btn-danger">Supprimer</a>
+        {% endif %}
+        <hr>
+        <p>{{ object.content|linebreaks }}</p>
+        <div class="mb-3">
+            {% for tag in object.tags.all %}
+                <span class="badge bg-secondary">{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+    </article>
+    <hr>
+    <h3>Commentaires</h3>
+    {% for comment in object.comments.all %}
+        <div class="card mb-2 bg-light">
+            <div class="card-body py-2">
+                <strong>{{ comment.author }}</strong>: {{ comment.content }}
+            </div>
+        </div>
+    {% endfor %}
+    
+    {% if user.is_authenticated %}
+        <form method="POST" class="mt-4">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="btn btn-primary">Commenter</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Connectez-vous</a> pour commenter.</p>
+    {% endif %}
+{% endblock %}
