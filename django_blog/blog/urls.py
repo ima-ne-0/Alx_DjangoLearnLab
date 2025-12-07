@@ -3,7 +3,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 from .views import (
     PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView,
-    CommentCreateView, CommentUpdateView, CommentDeleteView
+    CommentCreateView, CommentUpdateView, CommentDeleteView,
+    PostByTagListView  # <--- On importe la nouvelle classe
 )
 
 urlpatterns = [
@@ -20,14 +21,14 @@ urlpatterns = [
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
 
-    # Comment CRUD (CORRECTION ICI POUR ALX)
-    # Le robot veut exactement : post/<int:pk>/comments/new/
+    # Comment CRUD
     path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='comment-create'),
-    
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
     
-    # Tags & Search
-    path('tag/<str:tag_name>/', views.tags_view, name='tag-posts'),
+    # Tags (LA CORRECTION EST ICI)
+    # L'image demande exactement : tags/<slug:tag_slug>/
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='post-by-tag'),
+    
     path('search/', PostListView.as_view(), name='search'),
 ]
