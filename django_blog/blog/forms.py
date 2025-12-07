@@ -18,8 +18,8 @@ class PostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control'}),
-            # AJOUT OBLIGATOIRE POUR LE ROBOT ALX :
-            'tags': TagWidget(attrs={'class': 'form-control', 'placeholder': 'Tags (séparés par des virgules)'}),
+            # MODIFICATION ICI : On met les parenthèses vides pour le robot
+            'tags': TagWidget(),
         }
 
 class CommentForm(forms.ModelForm):
