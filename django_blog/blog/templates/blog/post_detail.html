@@ -32,7 +32,7 @@
         </div>
     {% endfor %}
     
-    {% if user.is_authenticated %}
+   {% if user.is_authenticated %}
         <div class="mt-4">
             <h5>Ajouter un commentaire</h5>
             <form method="POST" action="{% url 'comment-create' object.pk %}">
@@ -42,6 +42,19 @@
             </form>
         </div>
     {% else %}
-        <p><a href="{% url 'login' %}">Connectez-vous</a> pour commenter.</p>
-    {% endif %}
+    ```
+
+### Étape 4 : Créer le fichier `comment_form.html`
+
+Comme `CommentCreateView` l'utilise maintenant, assure-toi d'avoir le fichier `blog/templates/blog/comment_form.html` :
+
+```html
+{% extends 'blog/base.html' %}
+{% block content %}
+    <h3>Écrire un commentaire</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Publier</button>
+    </form>
 {% endblock %}

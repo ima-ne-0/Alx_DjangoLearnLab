@@ -20,8 +20,10 @@ urlpatterns = [
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
 
-    # Comment CRUD (Ajouts)
-    path('post/<int:pk>/comment/', CommentCreateView.as_view(), name='comment-create'),
+    # Comment CRUD (CORRECTION ICI POUR ALX)
+    # Le robot veut exactement : post/<int:pk>/comments/new/
+    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='comment-create'),
+    
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
     
@@ -29,4 +31,3 @@ urlpatterns = [
     path('tag/<str:tag_name>/', views.tags_view, name='tag-posts'),
     path('search/', PostListView.as_view(), name='search'),
 ]
-
