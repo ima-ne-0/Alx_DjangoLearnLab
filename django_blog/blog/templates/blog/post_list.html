@@ -1,0 +1,18 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    <h1>Articles</h1>
+    {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h2><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+                <p class="text-muted">Par {{ post.author }} | {{ post.published_date|date:"d M Y" }}</p>
+                <p>{{ post.content|truncatewords:30 }}</p>
+                {% for tag in post.tags.all %}
+                    <a href="{% url 'tag-posts' tag.name %}" class="badge bg-primary text-decoration-none">{{ tag.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    {% empty %}
+        <p>Aucun article trouvé.</p>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    <article>
+        <h1>{{ object.title }}</h1>
+        <p class="text-muted">Par {{ object.author }} | {{ object.published_date }}</p>
+        {% if object.author == user %}
+            <a href="{% url 'post-update' object.id %}" class="btn btn-sm btn-secondary">Modifier</a>
+            <a href="{% url 'post-delete' object.id %}" class="btn btn-sm btn-danger">Supprimer</a>
+        {% endif %}
+        <hr>
+        <p>{{ object.content|linebreaks }}</p>
+        <div class="mb-3">
+            {% for tag in object.tags.all %}
+                <span class="badge bg-secondary">{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+    </article>
+   <hr>
+    <h3>Commentaires</h3>
+    {% for comment in object.comments.all %}
+        <div class="card mb-2 bg-light">
+            <div class="card-body py-2">
+                <strong>{{ comment.author }}</strong>: {{ comment.content }}
+                
+                {% if comment.author == user %}
+                    <div class="float-end">
+                        <a href="{% url 'comment-update' comment.pk %}" class="btn btn-sm btn-outline-secondary">✎</a>
+                        <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-sm btn-outline-danger">✕</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    
+   {% if user.is_authenticated %}
+        <div class="mt-4">
+            <h5>Ajouter un commentaire</h5>
+            <form method="POST" action="{% url 'comment-create' object.pk %}">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+        </div>
+    {% else %}
+    ```
+
+### Étape 4 : Créer le fichier `comment_form.html`
+
+Comme `CommentCreateView` l'utilise maintenant, assure-toi d'avoir le fichier `blog/templates/blog/comment_form.html` :
+
+```html
+{% extends 'blog/base.html' %}
+{% block content %}
+    <h3>Écrire un commentaire</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Publier</button>
+    </form>
+{% endblock %}
