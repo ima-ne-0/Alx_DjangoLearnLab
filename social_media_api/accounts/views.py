@@ -1,16 +1,15 @@
-
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from .serializers import UserSerializer, RegisterSerializer
-from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from django.shortcuts import get_object_or_404
+from .serializers import UserSerializer, RegisterSerializer
+from .models import CustomUser  
+CustomUser = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()  
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -35,12 +34,13 @@ class CustomAuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
+
 class FollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()  
 
     def post(self, request, user_id):
-        user_to_follow = get_object_or_404(User, pk=user_id)
+        user_to_follow = get_object_or_404(CustomUser, pk=user_id)
         
         if user_to_follow == request.user:
             return Response({"error": "You cannot follow yourself"}, status=status.HTTP_400_BAD_REQUEST)
@@ -50,10 +50,10 @@ class FollowUserView(generics.GenericAPIView):
 
 class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()  
 
     def post(self, request, user_id):
-        user_to_unfollow = get_object_or_404(User, pk=user_id)
+        user_to_unfollow = get_object_or_404(CustomUser, pk=user_id)
         
         request.user.following.remove(user_to_unfollow)
         return Response({"message": f"You have unfollowed {user_to_unfollow.username}"}, status=status.HTTP_200_OK)
