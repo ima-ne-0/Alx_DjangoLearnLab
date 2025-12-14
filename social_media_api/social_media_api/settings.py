@@ -81,10 +81,14 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'default_db_name'),
+        'USER': os.environ.get('DB_USER', 'default_user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'default_password'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+    }
 }
 
 
